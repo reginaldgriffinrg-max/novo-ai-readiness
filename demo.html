@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo AI Readiness Demo | See What Your District Looks Like</title>
+    <meta name="description" content="Preview a real K-12 AI Governance and Readiness Scan. See how Novo Innovative Pathways assesses district AI readiness across 10 governance domains.">
+    <meta property="og:title" content="Novo AI Readiness Demo | K-12 District Scan Preview">
+    <meta property="og:description" content="Preview a real AI Governance and Readiness Scan for K-12 districts. 10 governance domains. Evidence-based scoring.">
+    <meta property="og:type" content="website">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0B2C4A;
+            --navy-light: #133B5C;
+            --teal: #0D9488;
+            --teal-light: #14B8A6;
+            --teal-bg: #F0FDFA;
+            --gold: #F5A623;
+            --white: #FFFFFF;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-700: #334155;
+            --gray-900: #0F172A;
+            --red-600: #DC2626;
+            --green-600: #16A34A;
+            --amber-500: #F59E0B;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-700);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ── Header ─────────────────────────────────── */
+        .site-header {
+            background: var(--navy);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .site-header .brand {
+            color: var(--white);
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+        .site-header .brand span {
+            color: var(--teal-light);
+        }
+        .site-header .tagline {
+            color: var(--gray-400);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* ── Hero ──────────────────────────────────── */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            padding: 60px 24px 50px;
+            text-align: center;
+        }
+        .hero h1 {
+            color: var(--white);
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .hero h1 em {
+            color: var(--teal-light);
+            font-style: normal;
+        }
+        .hero p {
+            color: var(--gray-400);
+            font-size: 18px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ── Container ─────────────────────────────── */
+        .container {
+            max-width: 720px;
+            margin: -30px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Lead Form Card ────────────────────────── */
+        .form-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(11, 44, 74, 0.12);
+            padding: 40px;
+        }
+        .form-card h2 {
+            color: var(--navy);
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        .form-card .form-subtitle {
+            color: var(--gray-500);
+            font-size: 15px;
+            margin-bottom: 28px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--gray-900);
+            transition: border-color 0.2s;
+            background: var(--white);
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+        .form-group input::placeholder {
+            color: var(--gray-400);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--teal);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 8px;
+        }
+        .submit-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+        .form-note {
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 12px;
+            margin-top: 12px;
+        }
+
+        /* ── Demo Results ──────────────────────────── */
+        .demo-results {
+            display: none;
+        }
+        .demo-results.visible {
+            display: block;
+        }
+        .results-header {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(11, 44, 74, 0.12);
+            padding: 36px 40px;
+            margin-bottom: 20px;
+        }
+        .results-header .district-name {
+            color: var(--navy);
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .results-header .scan-date {
+            color: var(--gray-500);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .overall-score {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: var(--gray-50);
+            border-radius: 10px;
+            border-left: 5px solid var(--gold);
+        }
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .score-circle .number {
+            color: var(--gold);
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .score-circle .scale {
+            color: var(--gray-400);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+        .score-detail h3 {
+            color: var(--navy);
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .score-detail p {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+        .tier-badge {
+            display: inline-block;
+            background: var(--navy);
+            color: var(--gold);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Domain Scores ─────────────────────────── */
+        .domain-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(11, 44, 74, 0.08);
+            padding: 32px 40px;
+            margin-bottom: 20px;
+        }
+        .domain-card h3 {
+            color: var(--navy);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .domain-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .domain-row:last-child { border-bottom: none; }
+        .domain-name {
+            font-size: 14px;
+            color: var(--gray-700);
+            flex: 1;
+        }
+        .domain-score-bar {
+            width: 120px;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            margin: 0 16px;
+            overflow: hidden;
+        }
+        .domain-score-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+        .domain-score-val {
+            font-weight: 700;
+            font-size: 14px;
+            width: 50px;
+            text-align: right;
+            color: var(--navy);
+        }
+        .fill-red { background: var(--red-600); }
+        .fill-amber { background: var(--amber-500); }
+        .fill-green { background: var(--green-600); }
+        .fill-teal { background: var(--teal); }
+
+        /* ── Methodology Note ──────────────────────── */
+        .methodology-note {
+            background: var(--teal-bg);
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin-bottom: 20px;
+            border: 1px solid #CCFBF1;
+        }
+        .methodology-note h4 {
+            color: var(--teal);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .methodology-note p {
+            color: var(--gray-700);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* ── CTA Card ──────────────────────────────── */
+        .cta-card {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .cta-card h3 {
+            color: var(--white);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+        .cta-card p {
+            color: var(--gray-400);
+            font-size: 15px;
+            margin-bottom: 24px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: var(--teal);
+            color: var(--white);
+            padding: 14px 36px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .cta-btn:hover { background: var(--teal-light); transform: translateY(-1px); }
+
+        /* ── Footer ────────────────────────────────── */
+        .site-footer {
+            text-align: center;
+            padding: 30px 24px;
+            color: var(--gray-400);
+            font-size: 13px;
+            border-top: 1px solid var(--gray-200);
+        }
+        .site-footer a {
+            color: var(--teal);
+            text-decoration: none;
+        }
+
+        /* ── Responsive ────────────────────────────── */
+        @media (max-width: 640px) {
+            .form-card, .results-header, .domain-card { padding: 24px 20px; }
+            .cta-card { padding: 30px 20px; }
+            .overall-score { flex-direction: column; text-align: center; }
+            .domain-score-bar { width: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <a href="https://novoinnovativepathways.com" class="brand">NOVO <span>INNOVATIVE PATHWAYS</span></a>
+        <span class="tagline">We don't sell AI. We govern it.</span>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>See What a District AI Readiness Scan <em>Actually Looks Like</em></h1>
+        <p>Preview a real scan from a Georgia school district scored across 10 governance domains using only publicly documented evidence.</p>
+    </section>
+
+    <!-- Lead Capture Form -->
+    <main class="container">
+        <div class="form-card" id="leadForm">
+            <h2>Access the Sample Scan</h2>
+            <p class="form-subtitle">Enter your information to view the full AI Readiness Scan results for a real K-12 district.</p>
+
+            <form action="https://formspree.io/f/mdapjawe" method="POST" id="captureForm">
+                <input type="hidden" name="_subject" value="Novo Demo: New Lead from AI Readiness Demo">
+                <input type="hidden" name="_next" value="">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Dr. Jane Smith" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Work Email</label>
+                    <input type="email" id="email" name="email" placeholder="jsmith@district.k12.ga.us" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="district">School District</label>
+                    <input type="text" id="district" name="district" placeholder="Appling County School District" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Your Role</label>
+                    <select id="role" name="role" required>
+                        <option value="" disabled selected>Select your role</option>
+                        <option value="Superintendent">Superintendent</option>
+                        <option value="Assistant Superintendent">Assistant Superintendent</option>
+                        <option value="CTO/CIO">CTO / CIO</option>
+                        <option value="Curriculum Director">Curriculum Director</option>
+                        <option value="Principal">Principal</option>
+                        <option value="Technology Director">Technology Director</option>
+                        <option value="Board Member">Board Member</option>
+                        <option value="Other District Leadership">Other District Leadership</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">View Sample Scan Results</button>
+                <p class="form-note">Your information is used only to follow up on your interest. We do not share or sell your data.</p>
+            </form>
+        </div>
+
+        <!-- Demo Results (hidden until form submit or admin bypass) -->
+        <div class="demo-results" id="demoResults">
+            <!-- Results Header -->
+            <div class="results-header">
+                <div class="district-name">Millbrook County School District</div>
+                <div class="scan-date">AI Governance & Readiness Scan | Sample Report</div>
+
+                <div class="overall-score">
+                    <div class="score-circle">
+                        <span class="number">1.20</span>
+                        <span class="scale">of 4.00</span>
+                    </div>
+                    <div class="score-detail">
+                        <h3>Developing Stage: Emerging AI Activity Without Formal Governance</h3>
+                        <p>This score reflects publicly available evidence only. Millbrook County has visible technology infrastructure and some strategic planning language, but AI-specific governance, policy, and professional development documentation have not yet reached public-facing channels. This is the most common profile Novo sees nationwide.</p>
+                        <span class="tier-badge">RECOMMENDED: GOVERNANCE SPRINT (T2)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain Scores -->
+            <div class="domain-card">
+                <h3>10-Domain Readiness Scores</h3>
+
+                <div class="domain-row">
+                    <span class="domain-name">AI Policy & Governance Framework</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-red" style="width:10%"></div></div>
+                    <span class="domain-score-val">0.40</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Technology Infrastructure & Data Systems</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-teal" style="width:50%"></div></div>
+                    <span class="domain-score-val">2.00</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Professional Development & AI Literacy</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-red" style="width:10%"></div></div>
+                    <span class="domain-score-val">0.40</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Curriculum Integration & Instructional Use</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-amber" style="width:25%"></div></div>
+                    <span class="domain-score-val">1.00</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Student Safety & Ethical AI Use</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-red" style="width:10%"></div></div>
+                    <span class="domain-score-val">0.40</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Data Privacy & Compliance</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-green" style="width:50%"></div></div>
+                    <span class="domain-score-val">2.00</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Stakeholder Communication & Engagement</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-amber" style="width:25%"></div></div>
+                    <span class="domain-score-val">1.00</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Budget & Resource Allocation</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-red" style="width:10%"></div></div>
+                    <span class="domain-score-val">0.40</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Strategic Planning & Leadership Vision</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-amber" style="width:38%"></div></div>
+                    <span class="domain-score-val">1.50</span>
+                </div>
+                <div class="domain-row">
+                    <span class="domain-name">Vendor & Partnership Management</span>
+                    <div class="domain-score-bar"><div class="domain-score-fill fill-red" style="width:8%"></div></div>
+                    <span class="domain-score-val">0.30</span>
+                </div>
+            </div>
+
+            <!-- Methodology Note -->
+            <div class="methodology-note">
+                <h4>About This Scan</h4>
+                <p>This scan uses Novo's Evidence Spine Model: Intent (does the district articulate AI-related goals?), Operationalization (are those goals resourced and structured?), and Evidence of Use (is there public documentation of implementation?). All findings are based on publicly available information. A score of 0 means "Not Publicly Documented," which is a transparency gap, not a capability failure. Districts often have internal work in progress that has not yet reached public-facing channels.</p>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-card">
+                <h3>What Would Your District Score?</h3>
+                <p>Millbrook County is a composite example representing the most common profile Novo sees nationally. Your district has its own story. We find it using your name, your public records, and your documentation — before your board asks you to.</p>
+                <a href="https://novoinnovativepathways.com">Book a Strategy Session</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>&copy; 2026 Novo Innovative Pathways. All rights reserved.</p>
+        <p style="margin-top:6px"><a href="https://novoinnovativepathways.com">novoinnovativepathways.com</a></p>
+    </footer>
+
+    <script>
+        (function() {
+            const form = document.getElementById('captureForm');
+            const formCard = document.getElementById('leadForm');
+            const results = document.getElementById('demoResults');
+
+            // ── Admin bypass: triple backtick or ?demo=skip ──
+            let backtickCount = 0;
+            let backtickTimer = null;
+
+            // URL param bypass
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('demo') === 'skip') {
+                showResults();
+            }
+
+            // Backtick bypass — window-level so it fires even when input is focused
+            window.addEventListener('keydown', function(e) {
+                if (e.key === '`') {
+                    backtickCount++;
+                    clearTimeout(backtickTimer);
+                    if (backtickCount >= 3) {
+                        backtickCount = 0;
+                        showResults();
+                        return;
+                    }
+                    backtickT       backtickTimer = setTimeout(function() { backtickCount = 0; }, 1500);
+                }
+            }, true); // capture phase — fires before any element handles it
+
+            // ── Form submission via AJAX ──
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const btn = form.querySelector('.submit-btn');
+                btn.textContent = 'Submitting...';
+                btn.disabled = true;
+
+                const data = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        // Store lead in sessionStorage as backup
+                        try {
+                            const lead = {
+                                name: data.get('name'),
+                                email: data.get('email'),
+                                district: data.get('district'),
+                                role: data.get('role'),
+                                timestamp: new Date().toISOString()
+                            };
+                            sessionStorage.setItem('novo_demo_lead', JSON.stringify(lead));
+                        } catch(err) { /* silent */ }
+
+                        showResults();
+                    } else {
+                        btn.textContent = 'View Sample Scan Results';
+                        btn.disabled = false;
+                        alert('There was an issue submitting the form. Please try again.');
+                    }
+                })
+                .catch(function() {
+                    btn.textContent = 'View Sample Scan Results';
+                    btn.disabled = false;
+                    alert('Network error. Please check your connection and try again.');
+                });
+            });
+
+            function showResults() {
+                formCard.style.display = 'none';
+                results.classList.add('visible');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        })();
+    </script>
+</body>
+</html>
